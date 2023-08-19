@@ -20,12 +20,20 @@ namespace FeiraFacil.Core
 
         public void Seed()
         {
-            _produtos.Add(new Produto { Codigo = 1, Nome = "Limonada Pequena 200 ml", Custo = 0.50M, Preco = 1.50m, Estoque = 30 });
-            _produtos.Add(new Produto { Codigo = 2, Nome = "Limonada Grande  300 ml", Custo = 0.75M, Preco = 3.00m, Estoque = 30 });
+            _produtos.Add(new Produto { Codigo = 1, Nome = "Limonada 200ml", Custo = 0.50M, Preco = 1.50m, Estoque = 30 });
+            _produtos.Add(new Produto { Codigo = 2, Nome = "Limonada 300ml", Custo = 0.75M, Preco = 3.00m, Estoque = 3000 });
 
             _clientes.Add(new Cliente { Codigo = 0, Nome = "Indefinido" });
             _clientes.Add(new Cliente { Codigo = 1, Nome = "Sidnei" });
             _clientes.Add(new Cliente { Codigo = 2, Nome = "Bruno" });
+
+            _pedidos.Add(new PedidoDeVenda(_clientes[0]).Adicionar(_produtos[0], 1).Adicionar(_produtos[1], 2));
+            _pedidos.Add(new PedidoDeVenda(_clientes[1]).Adicionar(_produtos[0], 3).Adicionar(_produtos[1], 4));
+            _pedidos.Add(new PedidoDeVenda(_clientes[2]).Adicionar(_produtos[0], 5).Adicionar(_produtos[1], 6));
+
+            _pedidos.Add(new PedidoDeVenda(_clientes[0]).Adicionar(_produtos[0], 1).Adicionar(_produtos[1], 2));
+            _pedidos.Add(new PedidoDeVenda(_clientes[1]).Adicionar(_produtos[0], 3).Adicionar(_produtos[1], 4));
+            _pedidos.Add(new PedidoDeVenda(_clientes[2]).Adicionar(_produtos[0], 5).Adicionar(_produtos[1], 6));
         }
 
         public void Atender(Cliente cliente, Produto produto, int quantidade)

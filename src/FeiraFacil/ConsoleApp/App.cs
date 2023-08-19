@@ -14,6 +14,7 @@ namespace ConsoleApp
             _stringComparison = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
             _menus = new();
             _active = true;
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public App AddMenu(string code, string title, Action action)

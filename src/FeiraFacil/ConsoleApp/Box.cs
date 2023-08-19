@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 
 namespace ConsoleApp
@@ -39,16 +40,19 @@ namespace ConsoleApp
 
     public class Box<TItem> : IBox
     {
-        private readonly List<Field> _fields = new();
+        private readonly ConsoleColor[] _colors;
+        private readonly List<Field> _fields;
         private readonly string _boxHeader;
         private readonly string[,] Line;
         private readonly char _border;
 
-        public Box(string boxHeader, string[,] lineBorder)
+        public Box(string boxHeader, string[,] lineBorder, params ConsoleColor[] colors)
         {
             _boxHeader = boxHeader;
             Line = lineBorder ?? IBox.LineBorder2;
             _border = Line[0, 0][0];
+            _colors = colors.Any() ? colors : new[] { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.Cyan, ConsoleColor.Blue, ConsoleColor.Magenta };
+            _fields = new();
         }
 
         public void Add(int length, string header, Func<TItem, string> selector)
@@ -70,10 +74,16 @@ namespace ConsoleApp
             Console.WriteLine($"{Line[7, 0]}{string.Join(Line[7, 1], _fields.Select(x => x.Border))}{Line[7, 2]}");
         }
 
-        private static void Write(IEnumerable<TItem> items, Func<TItem, string> draw)
+        private void Write(IEnumerable<TItem> items, Func<TItem, string> draw)
         {
+            var i = 0;
+            var color = Console.ForegroundColor;
             foreach (var item in items)
+            {
+                Console.ForegroundColor = _colors[i++ % _colors.Length];
                 Console.WriteLine(draw.Invoke(item));
+            }
+            Console.ForegroundColor = color;
         }
 
         private sealed class Field

@@ -6,10 +6,11 @@ namespace FeiraFacil.Core
 {
     public class PedidoDeVenda
     {
-        public DateTime DataVenda { get; set; }
-        public Cliente Cliente { get; set; }
-        public List<ItemPedido> Items { get; set; }
+        public DateTime DataVenda { get; }
+        public Cliente Cliente { get; }
+        public List<ItemPedido> Items { get; }
         public bool EstaAberto { get; private set; }
+        public decimal Valor => Items.Sum(x => x.Quantidade * x.Produto.Preco);
 
         public PedidoDeVenda(Cliente cliente)
         {
@@ -19,7 +20,7 @@ namespace FeiraFacil.Core
             EstaAberto = true;
         }
 
-        public void Adicionar(Produto produto, int quantidade)
+        public PedidoDeVenda Adicionar(Produto produto, int quantidade)
         {
             if (produto.Estoque >= quantidade)
             {
@@ -29,12 +30,14 @@ namespace FeiraFacil.Core
             }
             else // TODO: Rever isso!!!
                 Console.WriteLine($"Não temos tantos copos de limonada {produto.Nome}");
+
+            return this;
         }
 
         public decimal Fechar()
         {
             EstaAberto = false;
-            return Items.Sum(x => x.Quantidade * x.Produto.Preco);
+            return Valor;
         }
     }
 }

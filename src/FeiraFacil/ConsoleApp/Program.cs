@@ -15,11 +15,11 @@ namespace ConsoleApp
         {
             var app = new App();
             app.AddMenu("0", "Inicializar Sistema", () => _sistema.Seed());
-            app.AddMenu("1", "Listar Produtos", () => _boxProduto.Draw(_sistema.Produtos));
-            app.AddMenu("2", "Listar Clientes", () => _boxCliente.Draw(_sistema.Clientes));
-            app.AddMenu("3", "Listar Vendas", () => _boxPedidos.Draw(_sistema.Pedidos));
-            app.AddMenu("4", "Novo Pedido", () => Vender());
-            app.AddMenu("5", "Fechar Conta", () => Fechar());
+            app.AddMenu("P", "Listar Produtos", () => _boxProduto.Draw(_sistema.Produtos));
+            app.AddMenu("C", "Listar Clientes", () => _boxCliente.Draw(_sistema.Clientes));
+            app.AddMenu("V", "Listar Vendas", () => _boxPedidos.Draw(_sistema.Pedidos));
+            app.AddMenu("N", "Novo Pedido", () => Vender());
+            app.AddMenu("F", "Fechar Conta", () => Fechar());
             app.AddMenu("X", "Sair do Sistema", app.Sair);
             app.Run();
         }
