@@ -45,7 +45,7 @@ namespace ConsoleApp
 
         private static void FecharConta()
         {
-            var codigoCliente = GetInt("Informe o código do Cliente");
+            var codigoCliente = GetInt("Informe o código do Cliente: ");
             var cliente = _sistema.Clientes.FirstOrDefault(x => x.Codigo == codigoCliente);
             var valor = _sistema.FecharConta(cliente);
 
