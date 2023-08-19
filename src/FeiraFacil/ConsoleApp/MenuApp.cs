@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace ConsoleApp
 {
-    public class App
+    public class MenuApp
     {
         private readonly StringComparison _stringComparison;
         private readonly List<Menu> _menus;
         private bool _active;
 
-        public App(bool caseSensitive = false)
+        public MenuApp(bool caseSensitive = false)
         {
             _stringComparison = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
             _menus = new();
@@ -17,19 +17,30 @@ namespace ConsoleApp
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public App AddMenu(string code, string title, Action action)
+        public MenuApp AddMenu(string code, string title, Action action)
         {
             _menus.Add(new Menu { Code = code, Title = title, Action = action });
             return this;
         }
 
-        public void Run()
+        public int Run()
         {
-            while (Exibir())
+            try
             {
-                Console.Write("\r\n\r\n\r\nPressione Enter para voltar para o Menu... ");
+                while (Exibir())
+                {
+                    Console.Write("\r\n\r\n\r\nPressione Enter para voltar para o Menu... ");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine();
+                Console.WriteLine(ex.Message);
                 Console.ReadLine();
-                Console.Clear();
+                return ex.HResult;
             }
         }
 
