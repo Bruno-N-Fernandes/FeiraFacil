@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FeiraFacil.Core
 {
@@ -21,18 +22,19 @@ namespace FeiraFacil.Core
         public void Adicionar(Produto produto, int quantidade)
         {
             if (produto.Estoque >= quantidade)
-                Items.Add(new ItemPedido { Produto = produto, Quantidade = quantidade });
-            else
+            {
+                var item = new ItemPedido { Produto = produto, Quantidade = quantidade };
+                item.BaixarEstoque();
+                Items.Add(item);
+            }
+            else // TODO: Rever isso!!!
                 Console.WriteLine($"Não temos tantos copos de limonada {produto.Nome}");
         }
 
-
-        public void Fechar()
+        public decimal Fechar()
         {
             EstaAberto = false;
-            foreach (var item in Items)
-                item.BaixarEstoque();
+            return Items.Sum(x => x.Quantidade * x.Produto.Preco);
         }
-
     }
 }

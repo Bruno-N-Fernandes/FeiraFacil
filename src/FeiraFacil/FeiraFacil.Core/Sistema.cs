@@ -12,6 +12,12 @@ namespace FeiraFacil.Core
         public IEnumerable<Cliente> Clientes => _clientes;
         public IEnumerable<PedidoDeVenda> Pedidos => _pedidos;
 
+        public Sistema(bool seed = true)
+        {
+            if (seed)
+                Seed();
+        }
+
         public void Seed()
         {
             _produtos.Add(new Produto { Codigo = 1, Nome = "Limonada Pequena 200 ml", Custo = 0.50M, Preco = 1.50m, Estoque = 30 });
@@ -33,10 +39,10 @@ namespace FeiraFacil.Core
             pedido.Adicionar(produto, quantidade);
         }
 
-        public void FecharConta(Cliente cliente)
+        public decimal? FecharConta(Cliente cliente)
         {
             var pedido = _pedidos.Find(x => x.Cliente.Codigo == cliente.Codigo && x.EstaAberto);
-            pedido.Fechar();
+            return pedido?.Fechar();
         }
     }
 }

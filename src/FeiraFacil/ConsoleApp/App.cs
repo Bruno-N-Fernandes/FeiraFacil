@@ -5,19 +5,22 @@ namespace ConsoleApp
 {
     public class App
     {
-        private readonly List<Menu> _menus;
         private readonly StringComparison _stringComparison;
+        private readonly List<Menu> _menus;
         private bool _active;
 
-        public App(bool caseSensitive)
+        public App(bool caseSensitive = false)
         {
-            _menus = new();
             _stringComparison = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+            _menus = new();
             _active = true;
         }
 
-        public void AddMenu(string code, string title, Action action) =>
+        public App AddMenu(string code, string title, Action action)
+        {
             _menus.Add(new Menu { Code = code, Title = title, Action = action });
+            return this;
+        }
 
         public void Run()
         {
@@ -47,15 +50,15 @@ namespace ConsoleApp
         public void Sair() => _active = false;
 
 
-        public class Menu
+        private sealed class Menu
         {
-            public string Code { get; set; }
-            public string Title { get; set; }
-            public Action Action { get; set; }
+            internal string Code { get; set; }
+            internal string Title { get; set; }
+            internal Action Action { get; set; }
 
-            public void Exibir() => Console.WriteLine($"{Code} - {Title}");
+            internal void Exibir() => Console.WriteLine($"{Code} - {Title}");
 
-            public void Executar() => Action?.Invoke();
+            internal void Executar() => Action?.Invoke();
         }
     }
 }
