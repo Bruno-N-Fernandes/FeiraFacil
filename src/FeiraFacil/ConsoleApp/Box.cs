@@ -51,7 +51,7 @@ namespace ConsoleApp
             _boxHeader = boxHeader;
             Line = lineBorder ?? IBox.LineBorder2;
             _border = Line[0, 0][0];
-            _colors = colors.Any() ? colors : new[] { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.Cyan, ConsoleColor.Blue, ConsoleColor.Magenta };
+            _colors = colors.Any() ? colors : new[] { ConsoleColor.DarkGray, ConsoleColor.DarkBlue};
             _fields = new();
         }
 
@@ -77,13 +77,13 @@ namespace ConsoleApp
         private void Write(IEnumerable<TItem> items, Func<TItem, string> draw)
         {
             var i = 0;
-            var color = Console.ForegroundColor;
+            var color = Console.BackgroundColor;
             foreach (var item in items)
             {
-                Console.ForegroundColor = _colors[i++ % _colors.Length];
+                Console.BackgroundColor = _colors[i++ % _colors.Length];
                 Console.WriteLine(draw.Invoke(item));
             }
-            Console.ForegroundColor = color;
+            Console.BackgroundColor = color;
         }
 
         private sealed class Field
