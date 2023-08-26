@@ -1,0 +1,9 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+        "DontPadApi.BaseAddress": "https://api.dontpad.com/dontbase/",
+        "DontPadApi.ApplicationKey": "123456"
+    }
+}

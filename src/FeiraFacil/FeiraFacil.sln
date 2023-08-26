@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeiraFacil.Core", "FeiraFacil.Core\FeiraFacil.Core.csproj", "{D5E8880E-93ED-4D9C-A0B3-A55F0001FED4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeiraFacil.Core", "FeiraFacil.Core\FeiraFacil.Core.csproj", "{D5E8880E-93ED-4D9C-A0B3-A55F0001FED4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{E21998FF-68FB-4786-87FF-FD266F7933D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{E21998FF-68FB-4786-87FF-FD266F7933D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DontBase", "DontBase\DontBase.csproj", "{4591FDE4-86FE-40FE-8E8F-84EB5F160FD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E21998FF-68FB-4786-87FF-FD266F7933D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E21998FF-68FB-4786-87FF-FD266F7933D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E21998FF-68FB-4786-87FF-FD266F7933D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4591FDE4-86FE-40FE-8E8F-84EB5F160FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4591FDE4-86FE-40FE-8E8F-84EB5F160FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4591FDE4-86FE-40FE-8E8F-84EB5F160FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4591FDE4-86FE-40FE-8E8F-84EB5F160FD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
