@@ -14,7 +14,7 @@ namespace DontBase.Shareds.Sequences
         private bool _changed = false;
         private readonly Timer _timer;
         private readonly ConcurrentDictionary<string, ISequence> _sequences = new();
-        private readonly string _resource = "DontBase.Shareds.Sequences.SequenceDto";
+        private readonly string _resource = "@@Sequences";
         private readonly IDontPadApi _dontPadApi;
 
         public SequenceFactory(IServiceProvider serviceProvider)
