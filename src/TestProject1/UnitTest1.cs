@@ -1,4 +1,5 @@
 using FluentAssertions;
+using System.Drawing;
 
 namespace TestProject1
 {
@@ -6,7 +7,7 @@ namespace TestProject1
     {
 
         [Theory]
-        [InlineData(1, "um reais")]// TODO: Verificar plural e singular.
+        [InlineData(1, "um real")]
         [InlineData(2, "dois reais"), InlineData(3, "três reais"), InlineData(4, "quatro reais")]
         [InlineData(5, "cinco reais"), InlineData(6, "seis reais"), InlineData(7, "sete reais")]
         [InlineData(8, "oito reais"), InlineData(9, "nove reais"), InlineData(10, "dez reais")]
@@ -20,20 +21,23 @@ namespace TestProject1
         [InlineData(80, "oitenta reais"), InlineData(90, "noventa reais"), InlineData(100, "cem reais")]
         public void QuandoPedirParaEscreverChequeComNumerosInteiros_DeveRetornaroValorPorExtenso(decimal valor, string valorEsperado)
         {
-            var chequePorExtenso = new ChequePorExtenso();
+            var chequePorExtenso = new ChequePorExtenso(valor);
 
-            var porExtenso = chequePorExtenso.Escrever(valor);
+            var porExtenso = chequePorExtenso.Escrever();
 
             porExtenso.Should().Be(valorEsperado);
         }
 
         [Theory]
         [InlineData(21, "vinte e um reais")]
+        [InlineData(22, "vinte e dois reais")]
+        [InlineData(33, "trinta e três reais")]
+        [InlineData(234, "duzentos e trinta e quatro reais")]
         public void QuandoPedirParaEscreverChequeComNumerosDezenasUnidades_DeveRetornaroValorPorExtenso(decimal valor, string valorEsperado)
         {
-            var chequePorExtenso = new ChequePorExtenso();
+            var chequePorExtenso = new ChequePorExtenso(valor);
 
-            var porExtenso = chequePorExtenso.Escrever(valor);
+            var porExtenso = chequePorExtenso.Escrever();
 
             porExtenso.Should().Be(valorEsperado);
         }
@@ -41,34 +45,56 @@ namespace TestProject1
 
     public class ChequePorExtenso
     {
-        public string Escrever(decimal valor)
+        public Decimal Valor { get; private set; }
+        public int ValorInteiro => Convert.ToInt32(Valor);
+        public int ValorDecimal => Convert.ToInt32((Valor - ValorInteiro) * 100);
+
+        public int Centena => ValorInteiro % 1000;
+        public int Dezena => ValorInteiro % 100;
+        public int Unidade => ValorInteiro % 10;
+
+        public int DigitoCentena => Centena / 100;
+        public int DigitoDezena => Dezena / 10;
+        public int DigitoUnidade => Unidade / 1;
+
+
+        public ChequePorExtenso(decimal valor)
         {
-            var valorInteiro = Convert.ToInt32(valor);
-            var valorDecimal = Convert.ToInt32((valor - valorInteiro) * 100);
-
-            var dezena = valorInteiro / 10;
-            var unidade = valorInteiro % 10;
-
-            var retorno = "";
-            if (dezena == 1)
-                retorno += GetUnidade(valorInteiro % 100);
-            else
-            {
-                retorno += GetDezena(dezena);
-                if (unidade > 0)
-                {
-                    if (dezena > 1)
-                        retorno += " e ";
-                    retorno += GetUnidade(unidade);
-                }
-            }
-
-            return retorno + " reais";
+            Valor = valor;
         }
 
-        private static string GetUnidade(int valor)
+        public string Escrever()
         {
-            return valor switch
+            var retorno = "";
+            if (DigitoCentena > 0)
+                retorno += GetCentena(DigitoCentena, DigitoDezena + DigitoUnidade > 0);
+
+
+            if (DigitoDezena <= 1)
+                retorno += GetUnidade(ValorInteiro % 100, false);
+            else
+            {
+                retorno += GetDezena(DigitoDezena, DigitoUnidade > 0);
+                if (DigitoUnidade > 0)
+                    retorno += GetUnidade(DigitoUnidade, false);
+            }
+
+            return retorno + GetMoeda(ValorInteiro);
+        }
+
+        private string GetMoeda(int valorInteiro)
+        {
+            return valorInteiro switch
+            {
+                0 => "",
+                1 => " real",
+                _ => " reais",
+            };
+        }
+
+        private static string GetUnidade(int valor, bool plural)
+        {
+            var retorno = valor switch
             {
                 1 => "um",
                 2 => "dois",
@@ -91,11 +117,12 @@ namespace TestProject1
                 19 => "dezenove",
                 _ => "",
             };
+            return retorno;
         }
 
-        private static string GetDezena(int valor)
+        private static string GetDezena(int valor, bool plural)
         {
-            return valor switch
+            var retorno = valor switch
             {
                 2 => "vinte",
                 3 => "trinta",
@@ -108,6 +135,28 @@ namespace TestProject1
                 10 => "cem",
                 _ => "",
             };
+
+            return retorno + (plural ? " e " : "");
+        }
+
+        private static string GetCentena(int valor, bool plural)
+        {
+            var retorno = valor switch
+            {
+                1 => plural ? "cento" : "cem",
+                2 => "duzentos",
+                3 => "trezentos",
+                4 => "quatrocentos",
+                5 => "quinhentos",
+                6 => "seiscentos",
+                7 => "setecentos",
+                8 => "oitocentos",
+                9 => "novecentos",
+                10 => "mil",
+                _ => "",
+            };
+
+            return retorno + (plural ? " e " : "");
         }
     }
 }
