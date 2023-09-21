@@ -33,9 +33,42 @@ namespace TestProject1
         [InlineData(22, "vinte e dois reais")]
         [InlineData(33, "trinta e três reais")]
         [InlineData(234, "duzentos e trinta e quatro reais")]
+        [InlineData(1234, "um mil, duzentos e trinta e quatro reais")]
+        [InlineData(9234, "nove mil, duzentos e trinta e quatro reais")]
+        [InlineData(987234, "novecentos e oitenta e sete mil, duzentos e trinta e quatro reais")]
+        [InlineData(1987234, "um milhão, novecentos e oitenta e sete mil, duzentos e trinta e quatro reais")]
+        [InlineData(1987654321, "um bilhão, novecentos e oitenta e sete milhões, seiscentos e cinquenta e quatro mil, trezentos e vinte e um reais")]
+        [InlineData(2987654321, "dois bilhões, novecentos e oitenta e sete milhões, seiscentos e cinquenta e quatro mil, trezentos e vinte e um reais")]
+        [InlineData(537_412_987_654_321, "quinhentos e trinta e sete trilhões, quatrocentos e doze bilhões, novecentos e oitenta e sete milhões, seiscentos e cinquenta e quatro mil, trezentos e vinte e um reais")]
+        [InlineData(111_111_111_111_111, "cento e onze trilhões, cento e onze bilhões, cento e onze milhões, cento e onze mil, cento e onze reais")]
+        [InlineData(999_999_999_999_999, "novecentos e noventa e nove trilhões, novecentos e noventa e nove bilhões, novecentos e noventa e nove milhões, novecentos e noventa e nove mil, novecentos e noventa e nove reais")]
         public void QuandoPedirParaEscreverChequeComNumerosDezenasUnidades_DeveRetornaroValorPorExtenso(decimal valor, string valorEsperado)
         {
             var chequePorExtenso = new ChequePorExtenso(valor);
+
+            var porExtenso = chequePorExtenso.Escrever();
+
+            porExtenso.Should().Be(valorEsperado);
+        }
+
+        [Fact]
+        public void QuandoPedirParaEscreverChequeComTudoUm_DeveRetornaroValorPorExtenso()
+        {
+            var valorEsperado = "cento e onze trilhões, cento e onze bilhões, cento e onze milhões, cento e onze mil, cento e onze reais e onze centavos";
+
+            var chequePorExtenso = new ChequePorExtenso(111_111_111_111_111.11M);
+
+            var porExtenso = chequePorExtenso.Escrever();
+
+            porExtenso.Should().Be(valorEsperado);
+        }
+
+        [Fact]
+        public void QuandoPedirParaEscreverChequeComTudoNove_DeveRetornaroValorPorExtenso()
+        {
+            var valorEsperado = "novecentos e noventa e nove trilhões, novecentos e noventa e nove bilhões, novecentos e noventa e nove milhões, novecentos e noventa e nove mil, novecentos e noventa e nove reais e noventa e nove centavos";
+
+            var chequePorExtenso = new ChequePorExtenso(999_999_999_999_999.99M);
 
             var porExtenso = chequePorExtenso.Escrever();
 
@@ -45,44 +78,75 @@ namespace TestProject1
 
     public class ChequePorExtenso
     {
-        public Decimal Valor { get; private set; }
-        public int ValorInteiro => Convert.ToInt32(Valor);
-        public int ValorDecimal => Convert.ToInt32((Valor - ValorInteiro) * 100);
+        private readonly decimal _valorOriginal;
+        private decimal _valorAtual;
 
-        public int Centena => ValorInteiro % 1000;
-        public int Dezena => ValorInteiro % 100;
-        public int Unidade => ValorInteiro % 10;
+        public decimal ValorOriginal => _valorOriginal;
+        public long ValorInteiro => Convert.ToInt64(Math.Truncate(_valorAtual));
+        public long ValorDecimal => Convert.ToInt64(Math.Truncate((_valorAtual - ValorInteiro) * 100));
 
-        public int DigitoCentena => Centena / 100;
-        public int DigitoDezena => Dezena / 10;
-        public int DigitoUnidade => Unidade / 1;
+        public long Milhar => ValorInteiro % 10000;
+        public long Centena => ValorInteiro % 1000;
+        public long Dezena => ValorInteiro % 100;
+        public long Unidade => ValorInteiro % 10;
+
+        public long DigitoMilhar => Milhar / 1000;
+        public long DigitoCentena => Centena / 100;
+        public long DigitoDezena => Dezena / 10;
+        public long DigitoUnidade => Unidade / 1;
 
 
         public ChequePorExtenso(decimal valor)
         {
-            Valor = valor;
+            _valorOriginal = valor;
         }
 
         public string Escrever()
         {
             var retorno = "";
-            if (DigitoCentena > 0)
-                retorno += GetCentena(DigitoCentena, DigitoDezena + DigitoUnidade > 0);
 
+            _valorAtual = _valorOriginal / 1_000_000_000_000;
+            retorno += EscreverCore(" trilhão, ", " trilhões, ");
+
+            _valorAtual = _valorOriginal / 1_000_000_000;
+            retorno += EscreverCore(" bilhão, ", " bilhões, ");
+
+            _valorAtual = _valorOriginal / 1_000_000;
+            retorno += EscreverCore(" milhão, ", " milhões, ");
+
+            _valorAtual = _valorOriginal / 1_000;
+            retorno += EscreverCore(" mil, ", " mil, ");
+
+            _valorAtual = _valorOriginal / 1;
+            retorno += EscreverCore("", "");
+
+            retorno += GetMoeda(ValorInteiro);
+
+            _valorAtual = ValorDecimal;
+            if (_valorAtual > 0)
+                retorno += " e " + EscreverCore(" centavo", " centavos");
+
+            return retorno;
+        }
+
+        public string EscreverCore(string sufixoSingular, string sufixoPlural)
+        {
+            var retorno = "";
+
+            retorno += GetCentena(DigitoCentena, DigitoDezena + DigitoUnidade > 0);
 
             if (DigitoDezena <= 1)
-                retorno += GetUnidade(ValorInteiro % 100, false);
+                retorno += GetUnidade(Dezena, sufixoSingular, sufixoPlural);
             else
             {
                 retorno += GetDezena(DigitoDezena, DigitoUnidade > 0);
-                if (DigitoUnidade > 0)
-                    retorno += GetUnidade(DigitoUnidade, false);
+                retorno += GetUnidade(DigitoUnidade, sufixoSingular, sufixoPlural);
             }
 
-            return retorno + GetMoeda(ValorInteiro);
+            return retorno;
         }
 
-        private string GetMoeda(int valorInteiro)
+        private string GetMoeda(long valorInteiro)
         {
             return valorInteiro switch
             {
@@ -92,7 +156,7 @@ namespace TestProject1
             };
         }
 
-        private static string GetUnidade(int valor, bool plural)
+        private static string GetUnidade(long valor, string sufixoSingular, string sufixoPlural)
         {
             var retorno = valor switch
             {
@@ -117,13 +181,18 @@ namespace TestProject1
                 19 => "dezenove",
                 _ => "",
             };
+
+            if (!string.IsNullOrWhiteSpace(retorno))
+                retorno += (valor <= 1) ? sufixoSingular : sufixoPlural;
+
             return retorno;
         }
 
-        private static string GetDezena(int valor, bool plural)
+        private static string GetDezena(long valor, bool plural)
         {
             var retorno = valor switch
             {
+                1 => "dez",
                 2 => "vinte",
                 3 => "trinta",
                 4 => "quarenta",
@@ -132,14 +201,16 @@ namespace TestProject1
                 7 => "setenta",
                 8 => "oitenta",
                 9 => "noventa",
-                10 => "cem",
                 _ => "",
             };
 
-            return retorno + (plural ? " e " : "");
+            if (!string.IsNullOrWhiteSpace(retorno))
+                retorno += (plural ? " e " : "");
+
+            return retorno;
         }
 
-        private static string GetCentena(int valor, bool plural)
+        private static string GetCentena(long valor, bool plural)
         {
             var retorno = valor switch
             {
@@ -152,11 +223,13 @@ namespace TestProject1
                 7 => "setecentos",
                 8 => "oitocentos",
                 9 => "novecentos",
-                10 => "mil",
                 _ => "",
             };
 
-            return retorno + (plural ? " e " : "");
+            if (!string.IsNullOrWhiteSpace(retorno))
+                retorno += (plural ? " e " : "");
+
+            return retorno;
         }
     }
 }
