@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DontBase", "DontBase\DontBa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "TestProject1\TestProject1.csproj", "{7DCCC40A-7547-4689-986A-8E81990391EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompraFacil.App", "..\CompraFacil.App\CompraFacil.App.csproj", "{8DD281FD-82ED-42DD-9528-BD42269357E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompraFacil.App", "CompraFacil.App\CompraFacil.App.csproj", "{8DD281FD-82ED-42DD-9528-BD42269357E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
