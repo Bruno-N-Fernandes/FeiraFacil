@@ -6,7 +6,7 @@
 Drop Table If Exists #tmpGiroCompraRaphael;
 Select * Into #tmpGiroCompraRaphael From viewGiroCompraRaphael;
 
-Select Top 10000
+Select
 	Case 
 		When Relevancia <= 80 Then 'A'
 		When Relevancia <= 95 Then 'B'
