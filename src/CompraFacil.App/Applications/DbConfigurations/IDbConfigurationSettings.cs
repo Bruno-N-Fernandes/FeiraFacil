@@ -10,6 +10,6 @@ namespace CompraFacil.App.Applications.DbConfigurations
         string ConfigurationKeyColumn { get; set; }
         string ConfigurationValueColumn { get; set; }
         Func<IConfiguration, IDbConnection> DbConnectionFactory { get; set; }
-        IConfigurationSource CreateConfigurationSource(IConfigurationBuilder configurationBuilder);
+        IConfigurationSource CreateConfigurationSource();
     }
 }

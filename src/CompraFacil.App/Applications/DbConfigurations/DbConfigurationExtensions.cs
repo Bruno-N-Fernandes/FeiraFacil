@@ -6,11 +6,20 @@ namespace CompraFacil.App.Applications.DbConfigurations
 {
     public static class DbConfigurationExtensions
     {
-        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSource>(this IConfigurationBuilder builder, Func<IConfigurationBuilder, TDbConfigurationSource> factory)
-            where TDbConfigurationSource : IDbConfigurationSource => builder?.Add(factory.Invoke(builder));
+        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSource>(this IConfigurationBuilder builder)
+            where TDbConfigurationSource : IDbConfigurationSource, new() => builder?.Add(new TDbConfigurationSource());
+
+        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSettings>(this IConfigurationBuilder builder, Action<TDbConfigurationSettings> build)
+            where TDbConfigurationSettings : IDbConfigurationSettings, new()
+        {
+            var dbConfigurationSettings = new TDbConfigurationSettings();
+            build.Invoke(dbConfigurationSettings);
+            return builder?.Add(dbConfigurationSettings.CreateConfigurationSource());
+        }
+
 
         public static IConfigurationBuilder AddDbConfigurationSource(this IConfigurationBuilder builder, IDbConfigurationSettings dbConfigurationSettings)
-            => builder?.Add(dbConfigurationSettings.CreateConfigurationSource(builder));
+            => builder?.Add(dbConfigurationSettings.CreateConfigurationSource());
 
         internal static IDbCommand CreateCommand(this IDbConnection dbConnection, string commandText)
         {

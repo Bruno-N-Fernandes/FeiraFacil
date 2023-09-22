@@ -11,7 +11,6 @@ namespace CompraFacil.App.Applications.DbConfigurations
         public string ConfigurationValueColumn { get; set; }
         public Func<IConfiguration, IDbConnection> DbConnectionFactory { get; set; }
 
-        public IConfigurationSource CreateConfigurationSource(IConfigurationBuilder configurationBuilder)
-            => new DbConfigurationSource(configurationBuilder, this);
+        IConfigurationSource IDbConfigurationSettings.CreateConfigurationSource() => new DbConfigurationSourceProxy(this);
     }
 }
