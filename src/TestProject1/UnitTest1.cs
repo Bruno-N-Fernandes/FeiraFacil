@@ -85,12 +85,10 @@ namespace TestProject1
         public long ValorInteiro => Convert.ToInt64(Math.Truncate(_valorAtual));
         public long ValorDecimal => Convert.ToInt64(Math.Truncate((_valorAtual - ValorInteiro) * 100));
 
-        public long Milhar => ValorInteiro % 10000;
         public long Centena => ValorInteiro % 1000;
         public long Dezena => ValorInteiro % 100;
         public long Unidade => ValorInteiro % 10;
 
-        public long DigitoMilhar => Milhar / 1000;
         public long DigitoCentena => Centena / 100;
         public long DigitoDezena => Dezena / 10;
         public long DigitoUnidade => Unidade / 1;
@@ -135,13 +133,13 @@ namespace TestProject1
 
             retorno += GetCentena(DigitoCentena, DigitoDezena + DigitoUnidade > 0);
 
-            if (DigitoDezena <= 1)
-                retorno += GetUnidade(Dezena, sufixoSingular, sufixoPlural);
-            else
+            if (DigitoDezena > 1)
             {
                 retorno += GetDezena(DigitoDezena, DigitoUnidade > 0);
                 retorno += GetUnidade(DigitoUnidade, sufixoSingular, sufixoPlural);
             }
+            else
+                retorno += GetUnidade(Dezena, sufixoSingular, sufixoPlural);
 
             return retorno;
         }

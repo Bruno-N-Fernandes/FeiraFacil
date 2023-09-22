@@ -1,3 +1,4 @@
+using CompraFacil.App.Applications.DbConfigurations;
 using CompraFacil.App.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,17 +45,27 @@ namespace CompraFacil.App.Applications
         {
             var services = new ServiceCollection();
             var configuration = UseConfiguration();
-            services.AddSingleton(configuration);
+            services.AddSingleton<IConfiguration>(configuration);
             configureServices.Invoke(services, configuration);
             return services.BuildServiceProvider();
         }
 
-        private static IConfiguration UseConfiguration()
+        private static IConfigurationRoot UseConfiguration()
         {
+            var x = new DbConfigurationSettings
+            {
+                CommandSelectQuerySql = "Select * From Configuracao",
+                ConfigurationKeyColumn = "Chave",
+                ConfigurationValueColumn = "Valor",
+                DbConnectionFactory = c => new SqlConnection(c.GetConnectionString("GwNet"))
+            };
+
             var configurationBuilder = new ConfigurationBuilder()
-                //.AddEnvironmentVariables()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddDbConfigurationSource(x)
+                .AddDbConfigurationSource(builder => new DbConfiguration(builder))
+            ;
 
             return configurationBuilder.Build();
         }
