@@ -6,21 +6,69 @@ namespace CompraFacil.App.Applications.DbConfigurations
 {
     public static class DbConfigurationExtensions
     {
-        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSource>(this IConfigurationBuilder builder)
-            where TDbConfigurationSource : IDbConfigurationSource, new() => builder?.Add(new TDbConfigurationSource());
-
-        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSettings>(this IConfigurationBuilder builder, Action<TDbConfigurationSettings> build)
-            where TDbConfigurationSettings : IDbConfigurationSettings, new()
+        /// <summary>
+        /// builder.AddDbConfigurationSource<MyDbConfigurationSource>()
+        /// </summary>
+        /// <typeparam name="TDbConfigurationSource"></typeparam>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSource>(this IConfigurationBuilder builder) where TDbConfigurationSource : IDbConfigurationSource, new()
         {
-            var dbConfigurationSettings = new TDbConfigurationSettings();
-            build.Invoke(dbConfigurationSettings);
-            return builder?.Add(dbConfigurationSettings.CreateConfigurationSource());
+            var configurationSource = new TDbConfigurationSource();
+            return builder?.Add(configurationSource);
         }
 
 
-        public static IConfigurationBuilder AddDbConfigurationSource(this IConfigurationBuilder builder, IDbConfigurationSettings dbConfigurationSettings)
-            => builder?.Add(dbConfigurationSettings.CreateConfigurationSource());
+        /// <summary>
+        /// builder.AddDbConfigurationSource<DbConfigurationSettings>(x =>
+        /// {
+        ///     x.CommandSelectQuerySql = "Select * From Configuration";
+        ///     x.ConfigurationKeyColumn = "Key";
+        ///     x.ConfigurationValueColumn = "Value";
+        ///     x.DbConnectionFactory = c => new SqlConnection(c.GetConnectionString("ConnectionName"));
+        /// })
+        /// </summary>
+        /// <typeparam name="TDbConfigurationSettings"></typeparam>
+        /// <param name="builder"></param>
+        /// <param name="setup"></param>
+        /// <returns></returns>
+        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSettings>(
+            this IConfigurationBuilder builder, Action<TDbConfigurationSettings> setup)
+            where TDbConfigurationSettings : IDbConfigurationSettings, new()
+        {
+            var dbConfigurationSettings = new TDbConfigurationSettings();
+            setup?.Invoke(dbConfigurationSettings);
+            var configurationSource = dbConfigurationSettings.CreateConfigurationSource();
+            return builder?.Add(configurationSource);
+        }
 
+
+        /// <summary>
+        /// builder.AddDbConfigurationSource(new DbConfigurationSettings
+        /// {
+        ///     CommandSelectQuerySql = "Select * From Configuration",
+        ///     ConfigurationKeyColumn = "Key",
+        ///     ConfigurationValueColumn = "Value",
+        ///     DbConnectionFactory = c => new SqlConnection(c.GetConnectionString("ConnectionName"))
+        /// })
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="dbConfigurationSettings"></param>
+        /// <returns></returns>
+        public static IConfigurationBuilder AddDbConfigurationSource(
+            this IConfigurationBuilder builder, IDbConfigurationSettings dbConfigurationSettings)
+        {
+            var configurationSource = dbConfigurationSettings?.CreateConfigurationSource();
+            return builder?.Add(configurationSource);
+        }
+
+
+        /// <summary>
+        /// CreateCommand With CommandText
+        /// </summary>
+        /// <param name="dbConnection"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         internal static IDbCommand CreateCommand(this IDbConnection dbConnection, string commandText)
         {
             var dbCommand = dbConnection.CreateCommand();

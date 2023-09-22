@@ -53,26 +53,12 @@ namespace CompraFacil.App.Applications
         private static IConfigurationRoot UseConfiguration()
         {
             var configurationBuilder = new ConfigurationBuilder()
+                .AddDbConfigurationSource<MyDbConfigurationSource>()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddDbConfigurationSource<MyDbConfigurationSource>()
-                .AddDbConfigurationSource<DbConfigurationSettings>(x =>
-                {
-                    x.CommandSelectQuerySql = "Select * From Configuracao";
-                    x.ConfigurationKeyColumn = "Chave";
-                    x.ConfigurationValueColumn = "Valor";
-                    x.DbConnectionFactory = c => new SqlConnection(c.GetConnectionString("GwNet"));
-                })
-                .AddDbConfigurationSource(new DbConfigurationSettings
-                {
-                    CommandSelectQuerySql = "Select * From Configuracao",
-                    ConfigurationKeyColumn = "Chave",
-                    ConfigurationValueColumn = "Valor",
-                    DbConnectionFactory = c => new SqlConnection(c.GetConnectionString("GwNet"))
-                });
+            ;
 
-            var configuration = configurationBuilder.Build();
-            return configuration;
+            return configurationBuilder.Build();
         }
     }
 }
