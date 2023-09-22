@@ -25,7 +25,6 @@ namespace CompraFacil.App.Applications
         {
             services.UseDbConnection("GwNet");
             services.AddTransient<IGiroCompraRepository, GiroCompraRepository>();
-
             services.AddTransient<FormRelatorioCompras>();
         }
 
@@ -55,8 +54,7 @@ namespace CompraFacil.App.Applications
             var configurationBuilder = new ConfigurationBuilder()
                 .AddDbConfiguration<DbConfiguration>()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            ;
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             return configurationBuilder.Build();
         }
