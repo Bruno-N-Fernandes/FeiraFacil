@@ -7,12 +7,13 @@ namespace CompraFacil.App.Applications.DbConfigurations
     public static class DbConfigurationExtensions
     {
         /// <summary>
-        /// builder.AddDbConfigurationSource<MyDbConfigurationSource>()
+        /// builder.AddDbConfiguration<DbConfiguration>()
         /// </summary>
         /// <typeparam name="TDbConfigurationSource"></typeparam>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSource>(this IConfigurationBuilder builder) where TDbConfigurationSource : IDbConfigurationSource, new()
+        public static IConfigurationBuilder AddDbConfiguration<TDbConfigurationSource>(this IConfigurationBuilder builder) 
+            where TDbConfigurationSource : IDbConfigurationSource, new()
         {
             var configurationSource = new TDbConfigurationSource();
             return builder?.Add(configurationSource);
@@ -20,7 +21,7 @@ namespace CompraFacil.App.Applications.DbConfigurations
 
 
         /// <summary>
-        /// builder.AddDbConfigurationSource<DbConfigurationSettings>(x =>
+        /// builder.AddDbConfiguration<DbConfigurationSettings>(x =>
         /// {
         ///     x.CommandSelectQuerySql = "Select * From Configuration";
         ///     x.ConfigurationKeyColumn = "Key";
@@ -32,8 +33,7 @@ namespace CompraFacil.App.Applications.DbConfigurations
         /// <param name="builder"></param>
         /// <param name="setup"></param>
         /// <returns></returns>
-        public static IConfigurationBuilder AddDbConfigurationSource<TDbConfigurationSettings>(
-            this IConfigurationBuilder builder, Action<TDbConfigurationSettings> setup)
+        public static IConfigurationBuilder AddDbConfiguration<TDbConfigurationSettings>(this IConfigurationBuilder builder, Action<TDbConfigurationSettings> setup)
             where TDbConfigurationSettings : IDbConfigurationSettings, new()
         {
             var dbConfigurationSettings = new TDbConfigurationSettings();
@@ -44,7 +44,7 @@ namespace CompraFacil.App.Applications.DbConfigurations
 
 
         /// <summary>
-        /// builder.AddDbConfigurationSource(new DbConfigurationSettings
+        /// builder.AddDbConfiguration(new DbConfigurationSettings
         /// {
         ///     CommandSelectQuerySql = "Select * From Configuration",
         ///     ConfigurationKeyColumn = "Key",
@@ -55,8 +55,7 @@ namespace CompraFacil.App.Applications.DbConfigurations
         /// <param name="builder"></param>
         /// <param name="dbConfigurationSettings"></param>
         /// <returns></returns>
-        public static IConfigurationBuilder AddDbConfigurationSource(
-            this IConfigurationBuilder builder, IDbConfigurationSettings dbConfigurationSettings)
+        public static IConfigurationBuilder AddDbConfiguration(this IConfigurationBuilder builder, IDbConfigurationSettings dbConfigurationSettings)
         {
             var configurationSource = dbConfigurationSettings?.CreateConfigurationSource();
             return builder?.Add(configurationSource);

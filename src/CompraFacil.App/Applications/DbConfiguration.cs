@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 
 namespace CompraFacil.App.Applications
 {
-    public class MyDbConfigurationSource : DbConfigurationSource
+    public class DbConfiguration : DbConfigurationSource
     {
         protected override string CommandSelectQuerySql => "Select * From Configuracao";
         protected override string ConfigurationKeyColumn => "Chave";

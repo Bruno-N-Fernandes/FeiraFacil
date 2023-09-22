@@ -53,7 +53,7 @@ namespace CompraFacil.App.Applications
         private static IConfigurationRoot UseConfiguration()
         {
             var configurationBuilder = new ConfigurationBuilder()
-                .AddDbConfigurationSource<MyDbConfigurationSource>()
+                .AddDbConfiguration<DbConfiguration>()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             ;
