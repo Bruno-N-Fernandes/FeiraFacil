@@ -12,6 +12,8 @@ namespace CompraFacil.App.Applications.DbConfigurations
         protected override IDbConnection CreateDbConnection(IConfiguration configuration) => _dbConfigurationSettings.DbConnectionFactory.Invoke(configuration);
 
         public DbConfigurationSourceProxy(IDbConfigurationSettings dbConfigurationSettings)
-            => _dbConfigurationSettings = dbConfigurationSettings;
+        {
+            _dbConfigurationSettings = dbConfigurationSettings;
+        }
     }
 }

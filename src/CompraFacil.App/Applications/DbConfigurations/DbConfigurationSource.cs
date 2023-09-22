@@ -13,8 +13,6 @@ namespace CompraFacil.App.Applications.DbConfigurations
         protected abstract string ConfigurationValueColumn { get; }
         protected abstract IDbConnection CreateDbConnection(IConfiguration configuration);
 
-        protected DbConfigurationSource() { }
-
         IConfigurationProvider IConfigurationSource.Build(IConfigurationBuilder builder)
         {
             _configurationBuilder = builder;

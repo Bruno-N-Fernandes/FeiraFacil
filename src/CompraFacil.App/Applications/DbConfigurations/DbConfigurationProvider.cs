@@ -7,8 +7,13 @@ namespace CompraFacil.App.Applications.DbConfigurations
         private readonly IDbConfigurationSource _dbConfigurationSource;
 
         public DbConfigurationProvider(IDbConfigurationSource dbConfigurationSource)
-            => _dbConfigurationSource = dbConfigurationSource;
+        {
+            _dbConfigurationSource = dbConfigurationSource;
+        }
 
-        public override void Load() => _dbConfigurationSource.ExecuteQueryAndLoadData(Data);
+        public override void Load()
+        {
+            _dbConfigurationSource.ExecuteQueryAndLoadData(Data);
+        }
     }
 }
